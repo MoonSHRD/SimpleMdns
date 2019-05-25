@@ -1,1 +1,1 @@
-include ':app', ':p2mobile', ':p2mobile-sources'
+include ':app'

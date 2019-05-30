@@ -1,0 +1,12 @@
+I/GoLog: [*] Listening on: 0.0.0.0 with port: 4001
+I/GoLog: [*] Your Multiaddress Is: /ip4/0.0.0.0/tcp/4001/p2p/QmTNnQD3NvTXjLbu6M6yvxwjTWpemz5qkfot1QAwEexdBB
+I/GoLog: Got a new stream!
+I/GoLog: > Error reading from stdin
+E/Go: panic: EOF
+E/Go: goroutine 100 [running]:
+    p2chat/mDNS/android.writeData(0x4000021da0)
+    	/home/jack/go/src/p2chat/mDNS/android/p2mobile.go:59 +0x2cc
+    created by p2chat/mDNS/android.handleStream
+    	/home/jack/go/src/p2chat/mDNS/android/p2mobile.go:26 +0x16c
+A/libc: Fatal signal 6 (SIGABRT), code -6 (SI_TKILL) in tid 25360 (mple.simplemdns), pid 25250 (mple.simplemdns)
+Application terminated.

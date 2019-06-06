@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 //import java.util.concurrent.*;
 import android.os.AsyncTask;
+import android.os.Handler;
 
 //import p2mobile.P2mobile;
 import p2mobile.*;
@@ -18,6 +19,7 @@ public class p2chat extends AppCompatActivity {
       //  P2mobile.start();
         BackTask magic = new BackTask();
         magic.execute();
+        
 
     }
 

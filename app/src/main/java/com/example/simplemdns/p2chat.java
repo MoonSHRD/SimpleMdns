@@ -1,14 +1,13 @@
 package com.example.simplemdns;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-//import java.util.concurrent.*;
-import android.os.AsyncTask;
-import android.os.Handler;
+import android.os.IBinder;
 
-//import p2mobile.P2mobile;
-import p2mobile.*;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class p2chat extends AppCompatActivity {
 
@@ -16,27 +15,20 @@ public class p2chat extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_p2chat);
-      //  P2mobile.start();
-        BackTask magic = new BackTask();
-        magic.execute();
-        
+        startService(new Intent(this, P2ChatService.class));
+        ServiceConnection serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                // TODO
+            }
 
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                // TODO
+            }
+        };
+        bindService(new Intent(this, P2ChatService.class), serviceConnection, Context.BIND_AUTO_CREATE);
     }
-
-
-
-    class BackTask extends AsyncTask < Void, Void, Void > {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            P2mobile.start();
-          //  p2mobile.StreamApi
-            return null;
-
-        }
-    }
-
 
 
     /*
@@ -54,8 +46,8 @@ public class p2chat extends AppCompatActivity {
 
     /*
     new Thread(() -> {
-    //Do whatever
-        }).start();
+        //Do whatever
+    }).start();
 
 
         Runnable task = () -> {
@@ -69,12 +61,5 @@ public class p2chat extends AppCompatActivity {
     thread.start();
 
     System.out.println("Done!");
-
-
-
-
      */
-
-
-
 }

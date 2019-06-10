@@ -5,10 +5,15 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import p2mobile.P2mobile;
 
 public class P2ChatService extends Service {
     private P2ChatServiceBinder binder = new P2ChatServiceBinder();
+    private ScheduledExecutorService scheduledExecutorService;
 
     public P2ChatService() {
     }
@@ -21,11 +26,17 @@ public class P2ChatService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         onServiceStart();
-        return Service.START_STICKY;
+        return Service.START_NOT_STICKY;
     }
 
     private void onServiceStart() {
-        new Thread(P2mobile::start).start();
+        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        new Thread(() -> {
+            P2mobile.start();
+            scheduledExecutorService.scheduleAtFixedRate(() -> {
+                AppHelper.streamApi = P2mobile.getP();
+            }, 0, 2, TimeUnit.SECONDS);
+        }).start();
     }
 
     public class P2ChatServiceBinder extends Binder {
@@ -33,4 +44,10 @@ public class P2ChatService extends Service {
             return P2ChatService.this;
         }
     }
+
+    /*@Override
+    public boolean onUnbind(Intent intent) {
+        stopSelf();
+        return false;
+    }*/
 }

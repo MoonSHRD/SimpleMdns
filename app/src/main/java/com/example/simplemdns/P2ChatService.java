@@ -34,7 +34,7 @@ public class P2ChatService extends Service {
         new Thread(() -> {
             P2mobile.start();
             scheduledExecutorService.scheduleAtFixedRate(() -> {
-                AppHelper.streamApi = P2mobile.getP();
+                AppHelper.streamApi = P2mobile.getStreamApi();
             }, 0, 2, TimeUnit.SECONDS);
         }).start();
     }

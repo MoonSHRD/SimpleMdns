@@ -22,9 +22,9 @@
             android:exported="true"></service>
 
         <activity
-            android:name=".p2chat"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".MainActivity">
+            android:name=".ui.P2ChatActivity"
+            android:parentActivityName=".ui.MainActivity" />
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

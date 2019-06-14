@@ -1,10 +1,12 @@
-package com.example.simplemdns;
+package com.example.simplemdns.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.simplemdns.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startChat (View view) {
-        Intent intent = new Intent(this,p2chat.class );
+        Intent intent = new Intent(this, P2ChatActivity.class );
         startActivity(intent);
     }
 }

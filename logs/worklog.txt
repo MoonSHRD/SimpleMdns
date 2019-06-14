@@ -1,6 +1,6 @@
 
 05/25 21:01:41: Launching app
-$ adb shell am start -n "com.example.simplemdns/com.example.simplemdns.MainActivity" -a android.intent.action.MAIN -c android.intent.category.LAUNCHER
+$ adb shell am start -n "com.example.simplemdns/com.example.simplemdns.ui.MainActivity" -a android.intent.action.MAIN -c android.intent.category.LAUNCHER
 Client not ready yet..Waiting for process to come online
 Connected to process 23597 on device samsung-sm_g965f-2355178c370c7ece
 Capturing and displaying logcat messages from application. This behavior can be disabled in the "Logcat output" section of the "Debugger" settings page.

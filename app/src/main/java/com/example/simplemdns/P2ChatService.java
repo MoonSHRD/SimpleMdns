@@ -4,6 +4,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
+
+import com.example.simplemdns.models.Message;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -12,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 import p2mobile.P2mobile;
 
 public class P2ChatService extends Service {
+    private final static String LOG_TAG = "P2ChatService";
+
     private P2ChatServiceBinder binder = new P2ChatServiceBinder();
     private ScheduledExecutorService scheduledExecutorService;
 
@@ -31,12 +38,20 @@ public class P2ChatService extends Service {
 
     private void onServiceStart() {
         scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        new Thread(() -> {
-            P2mobile.start();
-            scheduledExecutorService.scheduleAtFixedRate(() -> {
-                AppHelper.streamApi = P2mobile.getStreamApi();
-            }, 0, 2, TimeUnit.SECONDS);
-        }).start();
+        new Thread(() -> P2mobile.start()).start();
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
+            AppHelper.streamApi = P2mobile.getStreamApi();
+
+            if(AppHelper.streamApi != null) {
+                String messageText = P2mobile.streamReader(AppHelper.streamApi);
+                if(!messageText.equals("")) {
+                    EventBus.getDefault().post(new Message(messageText));
+                    Log.d(LOG_TAG, "New message: " + messageText);
+                } else {
+                    Log.d(LOG_TAG, "No peers found yet.");
+                }
+            }
+        }, 3, 2, TimeUnit.SECONDS);
     }
 
     public class P2ChatServiceBinder extends Binder {
@@ -44,10 +59,4 @@ public class P2ChatService extends Service {
             return P2ChatService.this;
         }
     }
-
-    /*@Override
-    public boolean onUnbind(Intent intent) {
-        stopSelf();
-        return false;
-    }*/
 }

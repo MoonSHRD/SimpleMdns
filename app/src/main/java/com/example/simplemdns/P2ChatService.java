@@ -59,4 +59,8 @@ public class P2ChatService extends Service {
             return P2ChatService.this;
         }
     }
+
+    public void sendMessage(String text) {
+        P2mobile.streamWriter(AppHelper.streamApi, text);
+    }
 }

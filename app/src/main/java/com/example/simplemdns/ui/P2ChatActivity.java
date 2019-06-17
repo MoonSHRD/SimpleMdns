@@ -1,53 +1,45 @@
 package com.example.simplemdns.ui;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.widget.Toast;
+import android.widget.EditText;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.simplemdns.P2ChatService;
+import com.arellomobile.mvp.MvpActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.example.simplemdns.AppHelper;
 import com.example.simplemdns.R;
-import com.example.simplemdns.models.Message;
+import com.example.simplemdns.contracts.P2ChatUI;
+import com.example.simplemdns.presenter.P2ChatPresenter;
+import com.google.android.material.button.MaterialButton;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class P2ChatActivity extends AppCompatActivity {
+public class P2ChatActivity extends MvpActivity implements P2ChatUI {
+    @InjectPresenter
+    P2ChatPresenter presenter;
+
+    @BindView(R.id.log_view)
+    EditText logView;
+
+    @BindView(R.id.message_input)
+    EditText messageInput;
+
+    @BindView(R.id.send_button)
+    MaterialButton sendButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_p2chat);
-        startService(new Intent(this, P2ChatService.class));
-        ServiceConnection serviceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                // TODO
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                // TODO
-            }
-        };
-        bindService(new Intent(this, P2ChatService.class), serviceConnection, Context.BIND_AUTO_CREATE);
-        EventBus.getDefault().register(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onNewMessage(Message message) {
-        Toast.makeText(this, message.text, Toast.LENGTH_LONG).show();
+        ButterKnife.bind(this);
+        sendButton.setOnClickListener((v) -> {
+            presenter.sendMessage(messageInput.getText().toString());
+            messageInput.setText("");
+        });
     }
 
     @Override
-    protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
+    public void addLog(String text) {
+        logView.append(text);
     }
 }

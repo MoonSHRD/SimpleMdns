@@ -33,8 +33,10 @@ public class P2ChatActivity extends MvpActivity implements P2ChatUI {
         setContentView(R.layout.activity_p2chat);
         ButterKnife.bind(this);
         sendButton.setOnClickListener((v) -> {
-            presenter.sendMessage(messageInput.getText().toString());
-            messageInput.setText("");
+            if(!messageInput.getText().toString().equals("")) {
+                presenter.sendMessage(messageInput.getText().toString());
+                messageInput.setText("");
+            }
         });
     }
 

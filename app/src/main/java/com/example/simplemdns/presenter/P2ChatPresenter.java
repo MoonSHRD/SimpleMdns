@@ -46,6 +46,8 @@ public class P2ChatPresenter extends MvpPresenter<P2ChatUI> {
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
+        AppHelper.context.unbindService(AppHelper.serviceConnection);
+        AppHelper.context.stopService(new Intent(AppHelper.context, P2ChatService.class));
         super.onDestroy();
     }
 

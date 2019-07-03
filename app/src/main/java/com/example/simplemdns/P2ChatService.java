@@ -47,8 +47,6 @@ public class P2ChatService extends Service {
                 Message messageObject = gson.fromJson(message, Message.class);
                 EventBus.getDefault().post(messageObject);
                 Log.d(LOG_TAG, "New message! " + messageObject.from + " > " + messageObject.body);
-            } else {
-                Log.d(LOG_TAG, "No new messages.");
             }
         }, 0, 1, TimeUnit.SECONDS);
     }

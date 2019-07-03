@@ -7,6 +7,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.example.simplemdns.models.Message;
+import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -14,7 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import p2mobile.P2mobile;
+import pkg.Pkg;
 
 public class P2ChatService extends Service {
     private final static String LOG_TAG = "P2ChatService";
@@ -37,21 +38,19 @@ public class P2ChatService extends Service {
     }
 
     private void onServiceStart() {
+        final Gson gson = new Gson();
         scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        new Thread(() -> P2mobile.start()).start();
+        new Thread(() -> pkg.Pkg.start(AppHelper.SERVICE_TOPIC, AppHelper.PROTOCOL_ID, "", 0)).start();
         scheduledExecutorService.scheduleAtFixedRate(() -> {
-            AppHelper.streamApi = P2mobile.getStreamApi();
-
-            if(AppHelper.streamApi != null) {
-                String messageText = P2mobile.streamReader(AppHelper.streamApi);
-                if(!messageText.equals("")) {
-                    EventBus.getDefault().post(new Message(messageText));
-                    Log.d(LOG_TAG, "New message: " + messageText);
-                } else {
-                    Log.d(LOG_TAG, "No peers found yet.");
-                }
+            String message = Pkg.getMessages();
+            if(!message.isEmpty()) {
+                Message messageObject = gson.fromJson(message, Message.class);
+                EventBus.getDefault().post(messageObject);
+                Log.d(LOG_TAG, "New message! " + messageObject.from + " > " + messageObject.body);
+            } else {
+                Log.d(LOG_TAG, "No new messages.");
             }
-        }, 3, 2, TimeUnit.SECONDS);
+        }, 0, 1, TimeUnit.SECONDS);
     }
 
     public class P2ChatServiceBinder extends Binder {
@@ -61,6 +60,6 @@ public class P2ChatService extends Service {
     }
 
     public void sendMessage(String text) {
-        P2mobile.streamWriter(AppHelper.streamApi, text);
+        Pkg.publishMessage(AppHelper.SERVICE_TOPIC, text);
     }
 }

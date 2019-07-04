@@ -13,13 +13,15 @@ public class AppHelper extends Application {
 
     public static ServiceConnection serviceConnection = null;
     public static P2ChatService service = null;
-    public static Context context = null;
+    public Context context = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
         context = getApplicationContext();
-        AppHelper.context.startService(new Intent(AppHelper.context, P2ChatService.class));
+        this.context.startService(new Intent(this.context, P2ChatService.class));
+
         ServiceConnection serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
@@ -33,7 +35,8 @@ public class AppHelper extends Application {
                 AppHelper.service = null;
             }
         };
-        AppHelper.context.bindService(new Intent(AppHelper.context, P2ChatService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+
+        this.context.bindService(new Intent(this.context, P2ChatService.class), serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override

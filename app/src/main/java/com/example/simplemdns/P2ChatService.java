@@ -48,7 +48,7 @@ public class P2ChatService extends Service {
                 EventBus.getDefault().post(messageObject);
                 Log.d(LOG_TAG, "New message! " + messageObject.from + " > " + messageObject.body);
             }
-        }, 0, 1, TimeUnit.SECONDS);
+        }, 0, 300, TimeUnit.MILLISECONDS);
     }
 
     public class P2ChatServiceBinder extends Binder {
@@ -58,6 +58,6 @@ public class P2ChatService extends Service {
     }
 
     public void sendMessage(String text) {
-        Pkg.publishMessage(AppHelper.SERVICE_TOPIC, text);
+        Pkg.publishMessage(AppHelper.SERVICE_TOPIC, text + "\n");
     }
 }

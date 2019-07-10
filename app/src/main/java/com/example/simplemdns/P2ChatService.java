@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import pkg.Pkg;
+import p2mobile.P2mobile;
 
 public class P2ChatService extends Service {
     private final static String LOG_TAG = "P2ChatService";
@@ -40,9 +40,9 @@ public class P2ChatService extends Service {
     private void onServiceStart() {
         final Gson gson = new Gson();
         scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        new Thread(() -> pkg.Pkg.start(AppHelper.SERVICE_TOPIC, AppHelper.PROTOCOL_ID, "", 0)).start();
+        new Thread(() -> P2mobile.start(AppHelper.SERVICE_TOPIC, AppHelper.PROTOCOL_ID, "", 0)).start();
         scheduledExecutorService.scheduleAtFixedRate(() -> {
-            String message = Pkg.getMessages();
+            String message = P2mobile.getMessages();
             if(!message.isEmpty()) {
                 Message messageObject = gson.fromJson(message, Message.class);
                 EventBus.getDefault().post(messageObject);
@@ -58,6 +58,6 @@ public class P2ChatService extends Service {
     }
 
     public void sendMessage(String text) {
-        Pkg.publishMessage(AppHelper.SERVICE_TOPIC, text + "\n");
+        P2mobile.publishMessage(AppHelper.SERVICE_TOPIC, text + "\n");
     }
 }
